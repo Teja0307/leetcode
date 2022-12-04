@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int n=nums.size();
+        int result=0;
+        if(n==1&&target>nums[0])
+          result=1;
+        for(int i=0;i<n;i++)
+        {
+            if(nums[i]==target){
+              result=i;
+              break;}
+            else if(target<nums[0]){
+              result=0;
+              break;}
+            else if(target>nums[n-1]){
+              result=n;
+              break;}
+            else if(target>nums[i]&&target<nums[i+1]){
+                    result=i+1;   }
+        }
+        return result;   
+    }
+};
