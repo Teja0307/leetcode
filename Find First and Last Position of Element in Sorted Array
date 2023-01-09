@@ -1,0 +1,50 @@
+class Solution {
+public:
+
+    int first(vector<int>& arr,int n,int x){
+    int low=0,high=n-1;
+    int ans=-1;
+    while(low<=high){
+        int mid=(low+high)/2;
+        if(arr[mid]==x){
+            ans=mid;
+            high=mid-1;
+            continue;
+        }
+        else if(arr[mid]>x){
+            high=mid-1;
+        }
+        else{
+            low=mid+1;
+        }
+    }
+    return ans;
+}
+
+int last(vector<int>& arr,int n,int x){
+    int low=0,high=n-1;
+    int ans=-1;
+    while(low<=high){
+        int mid=(low+high)/2;
+        if(arr[mid]==x){
+            ans=mid;
+            low=mid+1;
+            continue;
+        }
+        else if(arr[mid]>x){
+            high=mid-1;
+        }
+        else{
+            low=mid+1;
+        }
+    }
+    return ans;
+}
+
+    vector<int> searchRange(vector<int>& arr, int x) {
+        int n=arr.size();
+        int a=first(arr,n,x);
+        int b=last(arr,n,x);
+    return {a,b};
+    }
+};
