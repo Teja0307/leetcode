@@ -11,22 +11,13 @@
  */
 class Solution {
 public:
-    TreeNode* find(TreeNode* root,int &k,int &ans){
-        if(!root) return NULL;
-        TreeNode* l=find(root->left,k,ans);
+int ans=-1;
+    int kthSmallest(TreeNode* root, int &k) {
+       if(!root) return -1;
+        kthSmallest(root->left,k);
         k--;
-        if(k==0){
-            ans=root->val;
-            return root;
-        }
-        TreeNode* r=find(root->right,k,ans);
-        return root;
-    }
-
-
-    int kthSmallest(TreeNode* root, int k) {
-        int ans=root->val;
-        TreeNode* r=find(root,k,ans);
+        if(k==0) return ans=root->val;
+        kthSmallest(root->right,k);
         return ans;
     }
 };
