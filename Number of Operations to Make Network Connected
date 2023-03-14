@@ -1,0 +1,60 @@
+
+
+class DisjointSet{
+public:
+	vector<int> parent,size;
+	DisjointSet(int n){
+		size.resize(n+1,1);
+		parent.resize(n+1);
+		for(int i=0;i<=n;i++) parent[i]=i;
+	}
+	
+	int findUpar(int node){
+		if(node==parent[node]) return node;
+		return findUpar(parent[node]);
+	}
+	
+	void UnionBySize(int u,int v){
+		int Upar_u=findUpar(u);
+		int Upar_v=findUpar(v);
+		if(Upar_u==Upar_v) return;
+		
+		if(size[Upar_u]<size[Upar_v]){
+			parent[Upar_u]=Upar_v;
+			size[Upar_v]+=size[Upar_u];
+		}
+		else{
+			parent[Upar_v]=Upar_u;
+			size[Upar_u]+=size[Upar_v];
+		}
+	}
+	
+};
+
+
+
+
+class Solution {
+public:
+    int makeConnected(int n, vector<vector<int>>& edge) {
+        DisjointSet ds(n);
+        int cntExtras = 0;
+        for (auto it : edge) {
+            int u = it[0];
+            int v = it[1];
+            if (ds.findUpar(u) == ds.findUpar(v)) {
+                cntExtras++;
+            }
+            else {
+                ds.UnionBySize(u, v);
+            }
+        }
+        int cntC = 0;
+        for (int i = 0; i < n; i++) {
+            if (ds.parent[i] == i) cntC++;
+        }
+        int ans = cntC - 1;
+        if (cntExtras >= ans) return ans;
+        return -1;
+    }
+};
