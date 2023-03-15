@@ -1,0 +1,87 @@
+class DisjointSet{
+public:
+	vector<int> parent,size;
+	DisjointSet(int n){
+		size.resize(n+1,1);
+		parent.resize(n+1);
+		for(int i=0;i<=n;i++) parent[i]=i;
+	}
+	
+	int findUpar(int node){
+		if(node==parent[node]) return node;
+		return findUpar(parent[node]);
+	}
+	
+	void UnionBySize(int u,int v){
+		int Upar_u=findUpar(u);
+		int Upar_v=findUpar(v);
+		if(Upar_u==Upar_v) return;
+		
+		if(size[Upar_u]<size[Upar_v]){
+			parent[Upar_u]=Upar_v;
+			size[Upar_v]+=size[Upar_u];
+		}
+		else{
+			parent[Upar_v]=Upar_u;
+			size[Upar_u]+=size[Upar_v];
+		}
+	}
+	
+};
+
+class Solution {
+private:
+    bool isvalid(int nrow,int ncol,int n,int m){
+        return nrow>=0 && nrow<n && ncol>=0 && ncol<m;
+    }            
+public:
+    int largestIsland(vector<vector<int>>& grid) {
+        int n=grid.size();
+        int m=grid[0].size();
+        DisjointSet ds(n*m);
+        for(int row=0;row<n;row++){
+            for(int col=0;col<m;col++){
+                if(grid[row][col]==0) continue;
+                
+                int delrow[]={-1,0,1,0};
+                int delcol[]={0,1,0,-1};
+                for(int i=0;i<4;i++){
+                    int nrow=row+delrow[i];
+                    int ncol=col+delcol[i];
+                    if(isvalid(nrow,ncol,n,m) && grid[nrow][ncol]==1){
+                        int nodeNo=row*m+col;
+                        int adjNodeNo=nrow*m+ncol;
+                        ds.UnionBySize(nodeNo,adjNodeNo);
+                    }
+                }
+            }
+        }
+        
+        int mx=0;
+        for(int row=0;row<n;row++){
+            for(int col=0;col<m;col++){
+                if(grid[row][col]==1) continue;
+                set<int> components;
+                int delrow[]={-1,0,1,0};
+                int delcol[]={0,1,0,-1};
+                for(int i=0;i<4;i++){
+                    int nrow=row+delrow[i];
+                    int ncol=col+delcol[i];
+                    if(isvalid(nrow,ncol,n,m) && grid[nrow][ncol]==1){
+                        components.insert(ds.findUpar(nrow*m+ncol));
+                    }
+                }
+                int size=0;
+                for(auto it:components){
+                    size+=ds.size[it];
+                }
+                mx=max(mx,size+1);
+            }
+        }
+        
+        for(int cell=0;cell<n*m;cell++){
+            mx=max(mx,ds.size[ds.findUpar(cell)]);
+        }
+        return mx;
+    }
+};
